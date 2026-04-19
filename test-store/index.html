@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Demo Store — 8 products</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0a0a0a; color: #f5f3ef; font-family: -apple-system, sans-serif; }
+.mono { font-family: ui-monospace, monospace; }
+.top { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid #2a2a2a; font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #8a8a86; font-family: ui-monospace, monospace; }
+.top b { color: #f5f3ef; }
+.hero { padding: 32px 20px 20px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: end; border-bottom: 1px solid #2a2a2a; }
+.hero h1 { font-family: Georgia, serif; font-size: 56px; line-height: 0.85; letter-spacing: -0.04em; font-weight: 400; }
+.hero h1 i { font-style: italic; color: #8a8a86; }
+.hero .right { text-align: right; font-size: 12px; color: #8a8a86; line-height: 1.5; }
+.hero .right b { color: #f5f3ef; font-size: 14px; display: block; }
+.search { padding: 16px 20px; display: flex; gap: 8px; border-bottom: 1px solid #2a2a2a; background: #141413; }
+.search input { flex: 1; max-width: 400px; padding: 12px 16px; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 100px; color: #f5f3ef; font-size: 14px; }
+.search input::placeholder { color: #6b6b60; }
+.search button { padding: 10px 16px; border-radius: 100px; border: 1px solid #2a2a2a; background: #1a1a18; color: #f5f3ef; font-size: 12px; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; }
+.search button.primary { background: #f5f3ef; color: #0a0a0a; border-color: #f5f3ef; }
+.products { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1px; background: #2a2a2a; }
+.product { background: #141413; padding: 20px; position: relative; }
+.product .num { position: absolute; top: 16px; right: 16px; font-family: ui-monospace, monospace; font-size: 10px; color: #6b6b60; }
+.product .img { font-size: 48px; margin-bottom: 16px; }
+.product h3 { font-size: 16px; font-weight: 600; line-height: 1.2; margin-bottom: 4px; }
+.product .meta { font-size: 11px; color: #8a8a86; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.product .desc { font-size: 12px; color: #8a8a86; line-height: 1.4; margin-bottom: 14px; min-height: 34px; }
+.product .price { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+.product .stock { font-size: 10px; padding: 4px 8px; border-radius: 100px; display: inline-flex; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600; }
+.in-stock { background: #f5f3ef; color: #0a0a0a; }
+.out-of-stock { background: transparent; color: #8a8a86; border: 1px solid #2a2a2a; }
+.product button { width: 100%; margin-top: 16px; padding: 12px; border-radius: 100px; border: 1px solid #f5f3ef; background: #f5f3ef; color: #0a0a0a; font-size: 12px; font-weight: 600; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; }
+.product button:disabled { background: transparent; color: #6b6b60; border-color: #2a2a2a; cursor: not-allowed; }
+.product button:hover:not(:disabled) { background: #ffffff; }
+.cart-bar { position: fixed; bottom: 20px; right: 20px; background: #f5f3ef; color: #0a0a0a; padding: 12px 18px; border-radius: 100px; display: flex; gap: 12px; align-items: center; font-size: 13px; font-weight: 600; cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 20; }
+.cart-page { display: none; max-width: 560px; margin: 0 auto; padding: 32px 20px 100px; }
+.cart-page.active { display: block; }
+.cart-item { display: flex; justify-content: space-between; gap: 16px; padding: 16px 0; border-bottom: 1px solid #2a2a2a; }
+.total { margin-top: 24px; border: 1px solid #2a2a2a; border-radius: 12px; padding: 16px; background: #141413; }
+.total div { display: flex; justify-content: space-between; font-size: 13px; padding: 6px 0; }
+.total div:last-child { font-size: 18px; font-weight: 700; border-top: 1px solid #2a2a2a; margin-top: 8px; padding-top: 12px; }
+.checkout { width: 100%; margin-top: 16px; padding: 14px; border-radius: 100px; border: none; background: #f5f3ef; color: #0a0a0a; font-size: 13px; font-weight: 700; font-family: ui-monospace, monospace; text-transform: uppercase; letter-spacing: 0.06em; cursor: pointer; }
+@media (max-width: 640px) { .hero { grid-template-columns: 1fr; } .hero h1 { font-size: 40px; } }
+</style>
+</head>
+<body>
+<div class="top"><div><b>Demo Store</b> — 8 products • Local test store • No ToS violation</div><div class="mono">Browser-use agent demo • No payment data</div></div>
+
+<div class="hero">
+  <h1>8 products.<br>One task: <i>check price,<br>add to cart, report total.</i></h1>
+  <div class="right">
+    <div><b>89€ headphones</b>in stock: 15 • ID:1</div>
+    <div style="margin-top:12px;"><b>39€ powerbank</b>in stock: 8 • ID:3</div>
+    <div style="margin-top:12px; font-size:10px; text-transform:uppercase; letter-spacing:0.08em;">Task for agent:<br>Check availability and price,<br>if in stock add to cart,<br>report total with delivery<br>Stop before payment</div>
+  </div>
+</div>
+
+<div class="search">
+  <input type="text" id="searchInput" placeholder="Search… headphones, powerbank, watch">
+  <button class="primary" onclick="searchProducts()">Search</button>
+  <button onclick="resetSearch()">Reset</button>
+</div>
+
+<div id="productsPage" class="products"></div>
+
+<div id="cartPage" class="cart-page">
+  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+    <h2 style="font-family:Georgia,serif; font-size:28px; font-weight:400;">Cart — <i>total with delivery</i></h2>
+    <button onclick="showProducts()" style="background:none; border:none; color:#8a8a86; font-size:12px; font-family:ui-monospace,monospace; text-transform:uppercase; cursor:pointer;">← Continue</button>
+  </div>
+  <div id="cartItems"></div>
+  <div class="total">
+    <div><span>Subtotal</span><span id="subTotal">0.00€</span></div>
+    <div><span>Delivery</span><span id="deliveryCost">5.99€</span></div>
+    <div><span>Total</span><span id="finalTotal">0.00€</span></div>
+  </div>
+  <button class="checkout" onclick="checkout()">Checkout — Demo (stops before payment)</button>
+  <div id="checkoutResult" style="margin-top:16px; display:none;"></div>
+</div>
+
+<div class="cart-bar" id="cartBtn" onclick="showCart()"><span>Cart</span><span id="cartCount">0</span><span style="opacity:0.5">•</span><span id="cartTotal">0.00€</span></div>
+
+<script>
+const products=[
+  {id:1,name:"Wireless Headphones Pro Max",brand:"SoundMax",price:89.00,stock:15,category:"headphones",description:"40h battery, ANC, Bluetooth 5.2",image:"🎧"},
+  {id:2,name:"TWS Earbuds Lite",brand:"SoundMax",price:49.00,stock:0,category:"headphones",description:"6h + 24h case, IPX4",image:"🎵"},
+  {id:3,name:"Powerbank 20000mAh Fast Charge",brand:"PowerCo",price:39.00,stock:8,category:"powerbank",description:"65W PD, USB-C, USB-A x2",image:"🔋"},
+  {id:4,name:"Smartwatch Fit Pro",brand:"WatchBrand",price:129.00,stock:12,category:"smartwatch",description:"1.4\" AMOLED, 14 days, GPS",image:"⌚"},
+  {id:5,name:"Fast Charger 65W GaN",brand:"ChargeMax",price:29.00,stock:25,category:"charger",description:"GaN, USB-C x2, USB-A, PD 3.0",image:"🔌"},
+  {id:6,name:"USB-C Cable 1.5m",brand:"ChargeMax",price:9.99,stock:50,category:"charger",description:"Braided, 100W, 1.5m",image:"🔗"},
+  {id:7,name:"Laptop Stand Aluminum",brand:"DeskPro",price:59.00,stock:3,category:"accessories",description:"Adjustable, aluminum, foldable",image:"💻"},
+  {id:8,name:"Wireless Mouse Ergo",brand:"DeskPro",price:35.00,stock:20,category:"accessories",description:"Ergonomic, 2.4G + Bluetooth",image:"🖱️"}
+];
+let cart=[]; let filtered=[...products];
+function render(){
+  const c=document.getElementById('productsPage'); c.innerHTML='';
+  filtered.forEach(p=>{
+    const d=document.createElement('div'); d.className='product';
+    d.innerHTML=`<div class="num mono">#${String(p.id).padStart(2,'0')} • ${p.category}</div><div class="img">${p.image}</div><h3>${p.name}</h3><div class="meta">${p.brand} • ${p.description}</div><div class="price">${p.price.toFixed(2)}€</div><div class="stock ${p.stock>0?'in-stock':'out-of-stock'}">${p.stock>0?`In stock: ${p.stock}`:'Out of stock'}</div><button onclick="addToCart(${p.id})" ${p.stock===0?'disabled':''}>${p.stock>0?'Add to cart':'Out of stock'}</button>`;
+    c.appendChild(d);
+  });
+}
+function searchProducts(){ const q=document.getElementById('searchInput').value.toLowerCase(); filtered=!q?[...products]:products.filter(p=>p.name.toLowerCase().includes(q)||p.category.toLowerCase().includes(q)); render(); }
+function resetSearch(){ document.getElementById('searchInput').value=''; filtered=[...products]; render(); }
+function addToCart(id){ const p=products.find(x=>x.id===id); if(!p||p.stock===0) return; const ex=cart.find(i=>i.id===id); if(ex) ex.qty++; else cart.push({...p,qty:1}); updateCart(); const btn=event.target; const orig=btn.textContent; btn.textContent='Added ✓'; setTimeout(()=>btn.textContent=orig,700); }
+function updateCart(){ const count=cart.reduce((s,i)=>s+i.qty,0); const total=cart.reduce((s,i)=>s+i.price*i.qty,0); document.getElementById('cartCount').textContent=count; document.getElementById('cartTotal').textContent=total.toFixed(2)+'€'; document.getElementById('subTotal').textContent=total.toFixed(2)+'€'; document.getElementById('finalTotal').textContent=(total+5.99).toFixed(2)+'€'; const cont=document.getElementById('cartItems'); cont.innerHTML=''; cart.forEach(item=>{ const row=document.createElement('div'); row.className='cart-item'; row.innerHTML=`<div><b style="font-size:13px;">${item.name}</b><br><small style="font-size:11px; color:#8a8a86; font-family:ui-monospace,monospace;">${item.brand} • Qty ${item.qty}</small></div><div style="text-align:right"><div style="font-weight:700">${(item.price*item.qty).toFixed(2)}€</div><button onclick="removeFromCart(${item.id})" style="font-size:10px; background:none; border:none; color:#8a8a86; cursor:pointer; text-decoration:underline; font-family:ui-monospace,monospace; text-transform:uppercase; margin-top:4px;">Remove</button></div>`; cont.appendChild(row); }); }
+function removeFromCart(id){ cart=cart.filter(i=>i.id!==id); updateCart(); }
+function showCart(){ document.getElementById('productsPage').style.display='none'; document.getElementById('cartPage').classList.add('active'); }
+function showProducts(){ document.getElementById('productsPage').style.display='grid'; document.getElementById('cartPage').classList.remove('active'); }
+function checkout(){ const total=cart.reduce((s,i)=>s+i.price*i.qty,0)+5.99; const res=document.getElementById('checkoutResult'); res.style.display='block'; res.innerHTML=`<div style="border:1px solid #2a2a2a; border-radius:12px; padding:16px; background:#141413;"><div style="font-size:13px; font-weight:600; margin-bottom:8px;">Demo checkout — No payment • Agent stops here</div><div style="font-size:12px; color:#8a8a86; line-height:1.5;">Subtotal ${(total-5.99).toFixed(2)}€<br>Delivery 5.99€<br><span style="font-size:16px; font-weight:700; color:#f5f3ef;">Total ${total.toFixed(2)}€</span><br><br>For browser-use agent: task complete when reports total with delivery. No card data entered, as required.</div></div>`; }
+render(); updateCart();
+</script>
+</body>
+</html>
